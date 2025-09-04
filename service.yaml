@@ -1,0 +1,226 @@
+# =================================
+# frontend
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: petful-frontend-service
+spec:
+  selector:
+    app: petful-frontend-service
+  ports:
+    - protocol: TCP
+      port: 3000
+      targetPort: 3000
+  type: ClusterIP
+
+
+---
+
+# =================================
+# Config Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: config-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # Config Service와 함께
+spec:
+  selector:
+    app: config-service
+  ports:
+    - protocol: TCP
+      port: 8888
+      targetPort: 8888
+  type: ClusterIP
+
+---
+# =================================
+# Discovery Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: discovery-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: discovery-service
+  ports:
+    - protocol: TCP
+      port: 8761
+      targetPort: 8761
+  type: ClusterIP
+
+---
+# =================================
+# Gateway Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: gateway-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: gateway-service
+  ports:
+    - protocol: TCP
+      port: 8080
+      targetPort: 8080
+  type: LoadBalancer
+
+---
+# =================================
+# User Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: user-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: user-service
+  ports:
+    - protocol: TCP
+      port: 8081
+      targetPort: 8081
+  type: ClusterIP
+
+---
+# =================================
+# Pet Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: pet-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: pet-service
+  ports:
+    - protocol: TCP
+      port: 8082
+      targetPort: 8082
+  type: ClusterIP
+
+---
+# =================================
+# Community Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: community-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: community-service
+  ports:
+    - protocol: TCP
+      port: 8083
+      targetPort: 8083
+  type: ClusterIP
+
+---
+# =================================
+# Advertiser Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: advertiser-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: advertiser-service
+  ports:
+    - protocol: TCP
+      port: 8084
+      targetPort: 8084
+  type: ClusterIP
+
+---
+# =================================
+# Campaign Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: campaign-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: campaign-service
+  ports:
+    - protocol: TCP
+      port: 8085
+      targetPort: 8085
+  type: ClusterIP
+
+---
+# =================================
+# Health Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: health-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: health-service
+  ports:
+    - protocol: TCP
+      port: 8086
+      targetPort: 8086
+  type: ClusterIP
+
+---
+# =================================
+# Notification Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: notification-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: notification-service
+  ports:
+    - protocol: TCP
+      port: 8087
+      targetPort: 8087
+  type: ClusterIP
+
+---
+# =================================
+# SNS Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: sns-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  selector:
+    app: sns-service
+  ports:
+    - protocol: TCP
+      port: 8088
+      targetPort: 8088
+  type: ClusterIP

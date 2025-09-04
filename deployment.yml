@@ -1,17 +1,19 @@
-# deployment.yaml
+# =================================
+# frontend Deployment
+# =================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: petful-frontend-deployment # 디플로이먼트의 이름
 spec:
-  replicas: 2 # 안정성을 위해 Pod를 2개 실행
+  replicas: 2
   selector:
     matchLabels:
-      app: petful-frontend # 이 라벨을 가진 Pod들을 관리
+      app: petful-frontend
   template:
     metadata:
       labels:
-        app: petful-frontend # Pod에 붙일 라벨
+        app: petful-frontend
     spec:
       containers:
         - name: petful-frontend-container
@@ -19,3 +21,349 @@ spec:
           image: gyongcode/petful-frontend:v1.0.1
           ports:
             - containerPort: 3000 # Next.js 앱이 사용하는 포트
+
+---
+# =================================
+# Config Service (가장 먼저 시작되어야 함)
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: config-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "1" # 1단계에서 실행
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: config-service
+  template:
+    metadata:
+      labels:
+        app: config-service
+    spec:
+      containers:
+        - name: config-service-container
+          image: gyongcode/petful-config-service:v0.0.1
+          ports:
+            - containerPort: 8888
+          env:
+            - name: SSH_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: config-service-secrets
+                  key: SSH_KEY
+            - name: KEYSTORE_PATH
+              value: "/app/secrets/keystore.p12"
+            - name: KEYSTORE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: config-service-secrets
+                  key: KEYSTORE_PASSWORD
+            - name: KEY_ALIAS
+              valueFrom:
+                secretKeyRef:
+                  name: config-service-secrets
+                  key: KEY_ALIAS
+
+---
+# =================================
+# Discovery Service (Eureka)
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: discovery-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: discovery-service
+  template:
+    metadata:
+      labels:
+        app: discovery-service
+    spec:
+      containers:
+        - name: discovery-service-container
+          image: gyongcode/petful-discovery-service:v0.0.1
+          ports:
+            - containerPort: 8761
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+
+---
+# =================================
+# Gateway Service (API Gateway)
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: gateway-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: gateway-service
+  template:
+    metadata:
+      labels:
+        app: gateway-service
+    spec:
+      containers:
+        - name: gateway-service-container
+          image: gyongcode/petful-gateway-service:v0.0.1
+          ports:
+            - containerPort: 8080
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# Business Services
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: user-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: user-service
+  template:
+    metadata:
+      labels:
+        app: user-service
+    spec:
+      containers:
+        - name: user-service-container
+          image: gyongcode/petful-user-service:v0.0.1
+          ports:
+            - containerPort: 8081
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pet-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: pet-service
+  template:
+    metadata:
+      labels:
+        app: pet-service
+    spec:
+      containers:
+        - name: pet-service-container
+          image: gyongcode/petful-pet-service:v0.0.1
+          ports:
+            - containerPort: 8082
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: community-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: community-service
+  template:
+    metadata:
+      labels:
+        app: community-service
+    spec:
+      containers:
+        - name: community-service-container
+          image: gyongcode/petful-community-service:v0.0.1
+          ports:
+            - containerPort: 8083
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# Advertiser Service
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: advertiser-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: advertiser-service
+  template:
+    metadata:
+      labels:
+        app: advertiser-service
+    spec:
+      containers:
+        - name: advertiser-service-container
+          image: gyongcode/petful-advertiser-service:v0.0.1
+          ports:
+            - containerPort: 8084
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# Campaign Service
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: campaign-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: campaign-service
+  template:
+    metadata:
+      labels:
+        app: campaign-service
+    spec:
+      containers:
+        - name: campaign-service-container
+          image: gyongcode/petful-campaign-service:v0.0.1
+          ports:
+            - containerPort: 8085
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# Health Service
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: health-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: health-service
+  template:
+    metadata:
+      labels:
+        app: health-service
+    spec:
+      containers:
+        - name: health-service-container
+          image: gyongcode/petful-health-service:v0.0.1
+          ports:
+            - containerPort: 8086
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# Notification Service
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: notification-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: notification-service
+  template:
+    metadata:
+      labels:
+        app: notification-service
+    spec:
+      containers:
+        - name: notification-service-container
+          image: gyongcode/petful-notification-service:v0.0.1
+          ports:
+            - containerPort: 8087
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
+
+---
+# =================================
+# SNS Service
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sns-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sns-service
+  template:
+    metadata:
+      labels:
+        app: sns-service
+    spec:
+      containers:
+        - name: sns-service-container
+          image: gyongcode/petful-sns-service:v0.0.1
+          ports:
+            - containerPort: 8088
+          env:
+            - name: SPRING_CONFIG_IMPORT
+              value: "configserver:http://config-service:8888"
+            - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
+              value: "http://discovery-service:8761/eureka"
