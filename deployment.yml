@@ -49,10 +49,6 @@ spec:
               mountPath: "/app/secrets"
               readOnly: true
           ports:
-      volumes:
-        - name: keystore-volume
-          secret:
-            secretName: keystore-secrets
             - containerPort: 8888
           env:
             - name: SSH_KEY
@@ -74,6 +70,10 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: KEY_ALIAS
+      volumes:
+        - name: keystore-volume
+          secret:
+            secretName: keystore-secrets
 
 ---
 # =================================
