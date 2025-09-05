@@ -4,7 +4,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: petful-frontend-deployment # 디플로이먼트의 이름
+  name: petful-frontend-deployment
 spec:
   replicas: 2
   selector:
@@ -17,21 +17,20 @@ spec:
     spec:
       containers:
         - name: petful-frontend-container
-          # ⬇️ Jenkins가 빌드 후 이 부분을 새 이미지 태그로 업데이트합니다.
           image: gyongcode/petful-frontend:v1.0.1
           ports:
-            - containerPort: 3000 # Next.js 앱이 사용하는 포트
+            - containerPort: 3000
 
 ---
 # =================================
-# Config Service (가장 먼저 시작되어야 함)
+# Config Service
 # =================================
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: config-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "1" # 1단계에서 실행
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: 1
   selector:
@@ -75,7 +74,7 @@ kind: Deployment
 metadata:
   name: discovery-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 1
   selector:
@@ -104,7 +103,7 @@ kind: Deployment
 metadata:
   name: gateway-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -135,7 +134,7 @@ kind: Deployment
 metadata:
   name: user-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -152,6 +151,8 @@ spec:
           ports:
             - containerPort: 8081
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -163,7 +164,7 @@ kind: Deployment
 metadata:
   name: pet-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -180,6 +181,8 @@ spec:
           ports:
             - containerPort: 8082
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -191,7 +194,7 @@ kind: Deployment
 metadata:
   name: community-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -208,6 +211,8 @@ spec:
           ports:
             - containerPort: 8083
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -222,7 +227,7 @@ kind: Deployment
 metadata:
   name: advertiser-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -239,6 +244,8 @@ spec:
           ports:
             - containerPort: 8084
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -253,7 +260,7 @@ kind: Deployment
 metadata:
   name: campaign-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -270,6 +277,8 @@ spec:
           ports:
             - containerPort: 8085
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -284,7 +293,7 @@ kind: Deployment
 metadata:
   name: health-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -301,6 +310,8 @@ spec:
           ports:
             - containerPort: 8086
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -315,7 +326,7 @@ kind: Deployment
 metadata:
   name: notification-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -332,6 +343,8 @@ spec:
           ports:
             - containerPort: 8087
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
@@ -346,7 +359,7 @@ kind: Deployment
 metadata:
   name: sns-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -363,6 +376,8 @@ spec:
           ports:
             - containerPort: 8088
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
