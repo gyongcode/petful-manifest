@@ -1,4 +1,76 @@
 # =================================
+# RabbitMQ Deployment
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1" # 인프라 컴포넌트로 가장 먼저 실행
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+        - name: rabbitmq-container
+          image: rabbitmq:3.13-management
+          ports:
+            - containerPort: 5672
+            - containerPort: 15672
+          env:
+            - name: RABBITMQ_DEFAULT_USER
+              valueFrom:
+                secretKeyRef:
+                  name: petful-secrets
+                  key: rabbitmq-username
+            - name: RABBITMQ_DEFAULT_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: petful-secrets
+                  key: rabbitmq-password
+
+---
+# =================================
+# Redis Deployment
+# =================================
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: redis-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1" # 인프라 컴포넌트로 가장 먼저 실행
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: redis
+  template:
+    metadata:
+      labels:
+        app: redis
+    spec:
+      containers:
+        - name: redis-container
+          image: redis:7
+          ports:
+            - containerPort: 6379
+          command: ["redis-server"]
+          args: ["--requirepass", "$(REDIS_PASSWORD)"]
+          env:
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: petful-secrets
+                  key: redis-password
+
+---
+# =================================
 # frontend Deployment
 # =================================
 apiVersion: apps/v1

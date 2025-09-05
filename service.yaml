@@ -1,4 +1,47 @@
 # =================================
+# RabbitMQ Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: rabbitmq-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1" # 인프라 컴포넌트
+spec:
+  selector:
+    app: rabbitmq
+  ports:
+    - name: amqp
+      protocol: TCP
+      port: 5672
+      targetPort: 5672
+    - name: management
+      protocol: TCP
+      port: 15672
+      targetPort: 15672
+  type: ClusterIP
+
+---
+# =================================
+# Redis Service
+# =================================
+apiVersion: v1
+kind: Service
+metadata:
+  name: redis-service
+  annotations:
+    argocd.argoproj.io/sync-wave: "-1" # 인프라 컴포넌트
+spec:
+  selector:
+    app: redis
+  ports:
+    - protocol: TCP
+      port: 6379
+      targetPort: 6379
+  type: ClusterIP
+
+---
+# =================================
 # frontend
 # =================================
 apiVersion: v1
