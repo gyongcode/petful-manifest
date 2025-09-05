@@ -115,7 +115,7 @@ spec:
     spec:
       containers:
         - name: config-service-container
-          image: gyongcode/petful-config-service:v0.0.25
+          image: gyongcode/petful-config-service:v0.0.27
           volumeMounts:
             - name: keystore-volume
               mountPath: "/app/secrets"
@@ -186,7 +186,7 @@ spec:
     spec:
       containers:
         - name: discovery-service-container
-          image: gyongcode/petful-discovery-service:v0.0.25
+          image: gyongcode/petful-discovery-service:v0.0.27
           ports:
             - containerPort: 8761
           env:
@@ -232,7 +232,7 @@ spec:
     spec:
       containers:
         - name: gateway-service-container
-          image: gyongcode/petful-gateway-service:v0.0.25
+          image: gyongcode/petful-gateway-service:v0.0.27
           ports:
             - containerPort: 8000
           env:
@@ -280,7 +280,7 @@ spec:
     spec:
       containers:
         - name: user-service-container
-          image: gyongcode/petful-user-service:v0.0.25
+          image: gyongcode/petful-user-service:v0.0.27
           ports:
             - containerPort: 8081
           env:
@@ -327,7 +327,7 @@ spec:
     spec:
       containers:
         - name: pet-service-container
-          image: gyongcode/petful-pet-service:v0.0.25
+          image: gyongcode/petful-pet-service:v0.0.27
           ports:
             - containerPort: 8082
           env:
@@ -374,7 +374,7 @@ spec:
     spec:
       containers:
         - name: community-service-container
-          image: gyongcode/petful-community-service:v0.0.25
+          image: gyongcode/petful-community-service:v0.0.27
           ports:
             - containerPort: 8083
           env:
@@ -424,7 +424,7 @@ spec:
     spec:
       containers:
         - name: advertiser-service-container
-          image: gyongcode/petful-advertiser-service:v0.0.25
+          image: gyongcode/petful-advertiser-service:v0.0.27
           ports:
             - containerPort: 8084
           env:
@@ -474,7 +474,7 @@ spec:
     spec:
       containers:
         - name: campaign-service-container
-          image: gyongcode/petful-campaign-service:v0.0.25
+          image: gyongcode/petful-campaign-service:v0.0.27
           ports:
             - containerPort: 8085
           env:
@@ -524,7 +524,7 @@ spec:
     spec:
       containers:
         - name: health-service-container
-          image: gyongcode/petful-health-service:v0.0.25
+          image: gyongcode/petful-health-service:v0.0.27
           ports:
             - containerPort: 8086
           env:
@@ -574,7 +574,7 @@ spec:
     spec:
       containers:
         - name: notification-service-container
-          image: gyongcode/petful-notification-service:v0.0.25
+          image: gyongcode/petful-notification-service:v0.0.27
           ports:
             - containerPort: 8087
           env:
@@ -625,7 +625,7 @@ spec:
     spec:
       containers:
         - name: sns-service-container
-          image: gyongcode/petful-sns-service:v0.0.25
+          image: gyongcode/petful-sns-service:v0.0.27
           ports:
             - containerPort: 8088
           env:
