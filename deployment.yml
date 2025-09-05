@@ -118,7 +118,7 @@ spec:
           ports:
             - containerPort: 8761
           env:
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
           # Health Check 추가
           livenessProbe:
@@ -164,7 +164,7 @@ spec:
           ports:
             - containerPort: 8080
           env:
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -214,7 +214,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -261,7 +261,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -308,7 +308,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -358,7 +358,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -408,7 +408,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -458,7 +458,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -508,7 +508,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
@@ -558,7 +558,7 @@ spec:
           env:
             - name: SPRING_PROFILES_ACTIVE
               value: prod
-            - name: SPRING_CONFIG_IMPORT
+            - name: CONFIG_SERVER_URI
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
