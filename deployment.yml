@@ -44,6 +44,10 @@ spec:
       containers:
         - name: config-service-container
           image: gyongcode/petful-config-service:v0.0.25
+          volumeMounts:
+            - name: keystore-volume
+              mountPath: "/app/secrets"
+              readOnly: true
           ports:
             - containerPort: 8888
           env:
@@ -52,8 +56,10 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: SSH_KEY
+
             - name: KEYSTORE_PATH
-              value: "/app/secrets/keystore.p12"
+              value: "/app/secrets/petful-api.jks"
+
             - name: KEYSTORE_PASSWORD
               valueFrom:
                 secretKeyRef:
