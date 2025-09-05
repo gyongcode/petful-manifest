@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
         - name: petful-frontend-container
-          image: gyongcode/petful-frontend:v0.0.33
+          image: gyongcode/petful-frontend:v0.0.34
           ports:
             - containerPort: 3000
 
