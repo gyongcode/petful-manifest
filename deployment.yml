@@ -30,7 +30,7 @@ kind: Deployment
 metadata:
   name: config-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "1"
+    argocd.argoproj.io/sync-wave: "0" # 가장 먼저 실행
 spec:
   replicas: 1
   selector:
@@ -70,6 +70,23 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: KEY_ALIAS
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            initialDelaySeconds: 60
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8888
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
       volumes:
         - name: keystore-volume
           secret:
@@ -84,7 +101,7 @@ kind: Deployment
 metadata:
   name: discovery-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "1" # Config Service 다음에 실행
 spec:
   replicas: 1
   selector:
@@ -103,6 +120,23 @@ spec:
           env:
             - name: SPRING_CONFIG_IMPORT
               value: "configserver:http://config-service:8888"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8761
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -113,7 +147,7 @@ kind: Deployment
 metadata:
   name: gateway-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "2" # Discovery Service 다음에 실행
 spec:
   replicas: 2
   selector:
@@ -134,6 +168,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8080
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -144,7 +195,7 @@ kind: Deployment
 metadata:
   name: user-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3" # Gateway Service 다음에 실행
 spec:
   replicas: 2
   selector:
@@ -167,6 +218,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8081
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 apiVersion: apps/v1
@@ -174,7 +242,7 @@ kind: Deployment
 metadata:
   name: pet-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -197,6 +265,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8082
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 apiVersion: apps/v1
@@ -204,7 +289,7 @@ kind: Deployment
 metadata:
   name: community-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -227,6 +312,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8083
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -237,7 +339,7 @@ kind: Deployment
 metadata:
   name: advertiser-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -260,6 +362,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8084
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8084
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -270,7 +389,7 @@ kind: Deployment
 metadata:
   name: campaign-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -293,6 +412,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8085
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -303,7 +439,7 @@ kind: Deployment
 metadata:
   name: health-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -326,6 +462,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8086
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8086
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -336,7 +489,7 @@ kind: Deployment
 metadata:
   name: notification-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -359,6 +512,23 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8087
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8087
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
 
 ---
 # =================================
@@ -369,7 +539,7 @@ kind: Deployment
 metadata:
   name: sns-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2"
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -392,3 +562,20 @@ spec:
               value: "configserver:http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+          # Health Check 추가
+          livenessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 120
+            periodSeconds: 30
+            timeoutSeconds: 10
+            failureThreshold: 3
+          readinessProbe:
+            httpGet:
+              path: /actuator/health
+              port: 8088
+            initialDelaySeconds: 90
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3

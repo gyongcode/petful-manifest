@@ -7,7 +7,7 @@ metadata:
   name: petful-frontend-service
 spec:
   selector:
-    app: petful-frontend-service
+    app: petful-frontend
   ports:
     - protocol: TCP
       port: 3000
@@ -23,7 +23,7 @@ kind: Service
 metadata:
   name: config-service
   annotations:
-    argocd.argoproj.io/sync-wave: "1" # Config Service와 함께
+    argocd.argoproj.io/sync-wave: "0" # Config Service와 함께
 spec:
   selector:
     app: config-service
@@ -42,7 +42,7 @@ kind: Service
 metadata:
   name: discovery-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "1" # Discovery Service와 함께
 spec:
   selector:
     app: discovery-service
@@ -61,7 +61,7 @@ kind: Service
 metadata:
   name: gateway-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "2" # Gateway Service와 함께
 spec:
   selector:
     app: gateway-service
@@ -80,7 +80,7 @@ kind: Service
 metadata:
   name: user-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: user-service
@@ -99,7 +99,7 @@ kind: Service
 metadata:
   name: pet-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: pet-service
@@ -118,7 +118,7 @@ kind: Service
 metadata:
   name: community-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: community-service
@@ -137,7 +137,7 @@ kind: Service
 metadata:
   name: advertiser-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: advertiser-service
@@ -156,7 +156,7 @@ kind: Service
 metadata:
   name: campaign-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: campaign-service
@@ -175,7 +175,7 @@ kind: Service
 metadata:
   name: health-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: health-service
@@ -194,7 +194,7 @@ kind: Service
 metadata:
   name: notification-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: notification-service
@@ -213,7 +213,7 @@ kind: Service
 metadata:
   name: sns-service
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Config Service 성공 후 실행
+    argocd.argoproj.io/sync-wave: "3" # 비즈니스 서비스들
 spec:
   selector:
     app: sns-service
