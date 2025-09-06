@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: rabbitmq-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -44,7 +44,7 @@ kind: Deployment
 metadata:
   name: redis-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -102,7 +102,7 @@ kind: Deployment
 metadata:
   name: config-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "0" # 가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "0" # 가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -142,7 +142,7 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: KEY_ALIAS
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -173,7 +173,7 @@ kind: Deployment
 metadata:
   name: discovery-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "1" # Config Service ?�음???�행
+    argocd.argoproj.io/sync-wave: "1" # Config Service ?�음???�행
 spec:
   replicas: 1
   selector:
@@ -192,7 +192,7 @@ spec:
           env:
             - name: CONFIG_SERVER_URI
               value: "http://config-service:8888"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -219,7 +219,7 @@ kind: Deployment
 metadata:
   name: gateway-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Discovery Service ?�음???�행
+    argocd.argoproj.io/sync-wave: "2" # Discovery Service ?�음???�행
 spec:
   replicas: 2
   selector:
@@ -236,11 +236,13 @@ spec:
           ports:
             - containerPort: 8000
           env:
+            - name: SPRING_PROFILES_ACTIVE
+              value: prod
             - name: CONFIG_SERVER_URI
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -267,7 +269,7 @@ kind: Deployment
 metadata:
   name: user-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "3" # Gateway Service ?�음???�행
+    argocd.argoproj.io/sync-wave: "3" # Gateway Service ?�음???�행
 spec:
   replicas: 2
   selector:
@@ -290,7 +292,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -337,7 +339,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -384,7 +386,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -434,7 +436,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -484,7 +486,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -534,7 +536,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -585,7 +587,7 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
 
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -635,7 +637,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+          # # Health Check 추�?
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
