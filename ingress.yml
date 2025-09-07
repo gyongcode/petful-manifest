@@ -25,12 +25,11 @@ metadata:
 
     # SSL 설정 (필요시 주석 해제)
     alb.ingress.kubernetes.io/certificate-arn: arn:aws:acm:ap-northeast-2:906034468269:certificate/abec550e-f816-4515-8799-2158405d8d4d
-    # 2. HTTP(80)와 HTTPS(443) 포트를 모두 사용하도록 설정
-    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
 
-    # 3. HTTP로 들어온 모든 요청을 HTTPS로 리디렉션
-    alb.ingress.kubernetes.io/actions.ssl-redirect: '{"Type": "redirect", "RedirectConfig": { "Protocol": "HTTPS", "Port": "443", "StatusCode": "HTTP_301"}}'
-  
+    alb.ingress.kubernetes.io/listen-ports: '[{"HTTP": 80}, {"HTTPS": 443}]'
+    # HTTP -> HTTPS 리디렉션 액션 정의 (이 액션은 80 포트에 자동 적용됨)
+    alb.ingress.kubernetes.io/ssl-redirect: "443"
+
     # ArgoCD sync wave
     argocd.argoproj.io/sync-wave: "4"
 spec:
