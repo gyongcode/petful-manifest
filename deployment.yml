@@ -492,7 +492,7 @@ spec:
     spec:
       containers:
         - name: recommendation-service-container
-          image: gyongcode/petful-recommendation-service:v0.0.32
+          image: gyongcode/petful-recommendation-service:v0.0.31
           ports:
             - containerPort: 8000
           env:
