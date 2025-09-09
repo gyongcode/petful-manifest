@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: rabbitmq-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -44,7 +44,7 @@ kind: Deployment
 metadata:
   name: redis-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -242,7 +242,9 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check 추�?
+            - name: FASTAPI_URI
+              value: "http://recommendation-service"
+          # # Health Check 설정
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
@@ -654,3 +656,30 @@ spec:
           #   periodSeconds: 15
           #   timeoutSeconds: 5
           #   failureThreshold: 3
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: recommendation-service-deployment
+  annotations:
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: recommendation-service
+  template:
+    metadata:
+      labels:
+        app: recommendation-service
+    spec:
+      containers:
+        - name: recommendation-service-container
+          image: gyongcode/petful-recommendation-service:v0.0.30
+          ports:
+            - containerPort: 8000
+          env:
+            - name: PET_SERVICE_URL
+              value: "http://pet-service"
+            - name: SNS_SERVICE_URL
+              value: "http://sns-service"
