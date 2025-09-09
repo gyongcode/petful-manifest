@@ -497,3 +497,5 @@ spec:
               value: "http://pet-service"
             - name: SNS_SERVICE_URL
               value: "http://sns-service"
+            - name : GATEWAY_URL
+              value: "http://gateway-service.petful:8000/api/v1"
