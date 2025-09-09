@@ -337,6 +337,9 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
+            - name : GATEWAY_URL
+              value: "http://gateway-service.petful:8000/api/v1"
+
 
 ---
 # =================================
@@ -497,5 +500,3 @@ spec:
               value: "http://pet-service"
             - name: SNS_SERVICE_URL
               value: "http://sns-service"
-            - name : GATEWAY_URL
-              value: "http://gateway-service.petful:8000/api/v1"
