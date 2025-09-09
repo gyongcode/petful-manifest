@@ -6,8 +6,7 @@ kind: Deployment
 metadata:
   name: rabbitmq-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?ï¿½í”„??ì»´í¬?ï¿½íŠ¸ï¿?ê°€??ë¨¼ï¿½? ?ï¿½í–‰
-spec:
+    argocd.argoproj.io/sync-wave: "-1" 
   replicas: 1
   selector:
     matchLabels:
@@ -44,7 +43,7 @@ kind: Deployment
 metadata:
   name: redis-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?ï¿½í”„??ì»´í¬?ï¿½íŠ¸ï¿?ê°€??ë¨¼ï¿½? ?ï¿½í–‰
+    argocd.argoproj.io/sync-wave: "-1"
 spec:
   replicas: 1
   selector:
@@ -102,7 +101,7 @@ kind: Deployment
 metadata:
   name: config-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "0" # ê°€??ë¨¼ï¿½? ?ï¿½í–‰
+    argocd.argoproj.io/sync-wave: "0" 
 spec:
   replicas: 1
   selector:
@@ -142,23 +141,7 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: KEY_ALIAS
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8888
-          #   initialDelaySeconds: 60
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8888
-          #   initialDelaySeconds: 30
-          #   periodSeconds: 10
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+         
       volumes:
         - name: keystore-volume
           secret:
@@ -173,7 +156,7 @@ kind: Deployment
 metadata:
   name: discovery-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "1" # Config Service ?ï¿½ìŒ???ï¿½í–‰
+    argocd.argoproj.io/sync-wave: "1" 
 spec:
   replicas: 1
   selector:
@@ -192,23 +175,7 @@ spec:
           env:
             - name: CONFIG_SERVER_URI
               value: "http://config-service:8888"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8761
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8761
-          #   initialDelaySeconds: 60
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+
 
 ---
 # =================================
@@ -244,23 +211,7 @@ spec:
               value: "http://discovery-service:8761/eureka"
             - name: FASTAPI_URI
               value: "http://recommendation-service.petful:8000"
-          # # Health Check ?¤ì •
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8000
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8000
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+          
 
 ---
 # =================================
@@ -271,7 +222,7 @@ kind: Deployment
 metadata:
   name: user-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "3" # Gateway Service ?ï¿½ìŒ???ï¿½í–‰
+    argocd.argoproj.io/sync-wave: "3" 
 spec:
   replicas: 2
   selector:
@@ -294,23 +245,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8081
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8081
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+          
 
 ---
 apiVersion: apps/v1
@@ -341,23 +276,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8082
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8082
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+       
 
 ---
 apiVersion: apps/v1
@@ -388,23 +307,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8083
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8083
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+        
 
 ---
 # =================================
@@ -438,23 +341,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8084
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8084
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+         
 
 ---
 # =================================
@@ -488,23 +375,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8085
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8085
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+
 
 ---
 # =================================
@@ -538,23 +409,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8086
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8086
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+
 
 ---
 # =================================
@@ -589,23 +444,6 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
 
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8087
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8087
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
 
 ---
 # =================================
@@ -639,23 +477,7 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          # # Health Check ì¶”ï¿½?
-          # livenessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8088
-          #   initialDelaySeconds: 120
-          #   periodSeconds: 30
-          #   timeoutSeconds: 10
-          #   failureThreshold: 3
-          # readinessProbe:
-          #   httpGet:
-          #     path: /actuator/health
-          #     port: 8088
-          #   initialDelaySeconds: 90
-          #   periodSeconds: 15
-          #   timeoutSeconds: 5
-          #   failureThreshold: 3
+
 ---
 apiVersion: apps/v1
 kind: Deployment
