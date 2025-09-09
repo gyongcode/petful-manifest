@@ -497,6 +497,6 @@ spec:
             - containerPort: 8000
           env:
             - name: PET_SERVICE_URL
-              value: "http://pet-service"
+              value: "http://pet-service.petful:8082"
             - name: SNS_SERVICE_URL
-              value: "http://sns-service"
+              value: "http://sns-service.petful:8088"
