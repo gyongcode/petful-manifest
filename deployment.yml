@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: rabbitmq-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" 
+    argocd.argoproj.io/sync-wave: "-1"
   replicas: 1
   selector:
     matchLabels:
@@ -101,7 +101,7 @@ kind: Deployment
 metadata:
   name: config-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "0" 
+    argocd.argoproj.io/sync-wave: "0"
 spec:
   replicas: 1
   selector:
@@ -141,7 +141,7 @@ spec:
                 secretKeyRef:
                   name: config-service-secrets
                   key: KEY_ALIAS
-         
+
       volumes:
         - name: keystore-volume
           secret:
@@ -156,7 +156,7 @@ kind: Deployment
 metadata:
   name: discovery-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "1" 
+    argocd.argoproj.io/sync-wave: "1"
 spec:
   replicas: 1
   selector:
@@ -176,7 +176,6 @@ spec:
             - name: CONFIG_SERVER_URI
               value: "http://config-service:8888"
 
-
 ---
 # =================================
 # Gateway Service (API Gateway)
@@ -186,7 +185,7 @@ kind: Deployment
 metadata:
   name: gateway-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "2" # Discovery Service ?ï¿½ìŒ???ï¿½í–‰
+    argocd.argoproj.io/sync-wave: "2"
 spec:
   replicas: 2
   selector:
@@ -211,7 +210,6 @@ spec:
               value: "http://discovery-service:8761/eureka"
             - name: FASTAPI_URI
               value: "http://recommendation-service.petful:8000"
-          
 
 ---
 # =================================
@@ -222,7 +220,7 @@ kind: Deployment
 metadata:
   name: user-service-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "3" 
+    argocd.argoproj.io/sync-wave: "3"
 spec:
   replicas: 2
   selector:
@@ -245,7 +243,6 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-          
 
 ---
 apiVersion: apps/v1
@@ -276,7 +273,6 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-       
 
 ---
 apiVersion: apps/v1
@@ -307,7 +303,6 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-        
 
 ---
 # =================================
@@ -341,7 +336,6 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-         
 
 ---
 # =================================
@@ -376,7 +370,6 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
 
-
 ---
 # =================================
 # Health Service
@@ -410,7 +403,6 @@ spec:
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
 
-
 ---
 # =================================
 # Notification Service
@@ -443,7 +435,6 @@ spec:
               value: "http://config-service:8888"
             - name: EUREKA_CLIENT_SERVICE_URL_DEFAULTZONE
               value: "http://discovery-service:8761/eureka"
-
 
 ---
 # =================================
