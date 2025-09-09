@@ -6,7 +6,7 @@ kind: Deployment
 metadata:
   name: rabbitmq-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -44,7 +44,7 @@ kind: Deployment
 metadata:
   name: redis-deployment
   annotations:
-    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
+    argocd.argoproj.io/sync-wave: "-1" # ?�프??컴포?�트�?가??먼�? ?�행
 spec:
   replicas: 1
   selector:
@@ -89,7 +89,7 @@ spec:
     spec:
       containers:
         - name: petful-frontend-container
-          image: gyongcode/petful-frontend:v0.0.1
+          image: gyongcode/petful-frontend:v0.0.41
           ports:
             - containerPort: 3000
 
@@ -244,7 +244,7 @@ spec:
               value: "http://discovery-service:8761/eureka"
             - name: FASTAPI_URI
               value: "http://recommendation-service.petful:8000"
-          # # Health Check 설정
+          # # Health Check ?�정
           # livenessProbe:
           #   httpGet:
           #     path: /actuator/health
